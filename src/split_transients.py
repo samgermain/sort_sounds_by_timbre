@@ -29,9 +29,10 @@ def transients_from_sound_file(fileName, sr=44100):
 
     onset_samples = list(librosa.frames_to_samples(onset_frames))
     onset_samples = np.concatenate(onset_samples, len(y))
-    return transients_from_onsets(onset_samples)
+    transients =  transients_from_onsets(onset_samples)
+    return transients
 
-def transients_from_midi(midiFile, soundFile, sr=41000):
+def transients_from_midi(midiFile, soundFile, sr=44100):
     y, sr = ezLoad(soundFile, sr)
     midi_data = pretty_midi.PrettyMIDI(midiFile)
     onsets = midi_data.get_onsets()
@@ -48,4 +49,3 @@ def main():
     print(transients)
     print(midiTransients)
 
-main()

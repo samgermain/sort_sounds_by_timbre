@@ -1,6 +1,17 @@
 import pretty_midi
 
 def create_track_from_time(intervals, note='A3', instrument='Acoustic Grand Piano', velocity=100):
+    """Takes a list of start and stop times that this sound plays and writes a track with those start and stop times
+
+    Args:
+        intervals ([(int, int)]): A list of start and stop times
+        note (str, optional): Defaults to 'A3'.
+        instrument (str, optional): The instrument this midi track is recorded as. Defaults to 'Acoustic Grand Piano'.
+        velocity (int, optional): Defaults to 100.
+
+    Returns:
+        (Instrument): An instrument that can be added to a midi
+    """
     program = pretty_midi.instrument_name_to_program(instrument)
     instrument = pretty_midi.Instrument(program=program)
     note_number = pretty_midi.note_name_to_number(note)

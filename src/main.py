@@ -5,16 +5,16 @@ from sort_sounds import sort_sounds
 from create_midi_files import create_midi_from_sound_list
 
 parser = argparse.ArgumentParser(description='Create a plot of each sound in the sound, sorted by sound similarity. x=time')
-parser.add_argument('-i', '--input', type=str, default='../sound-files/first-four-seconds.wav')
-# parser.add_argument('-o', '--output', type=str, default='transients')
-parser.add_argument('-m', '--midi', type=str)
+parser.add_argument('-i', '--infile', type=str, default='../sound-files/first-four-seconds.wav')    #The sound file to read from
+parser.add_argument('-o', '--outfile', type=str, default='midi_file.mid')   #The midi file to write to
+parser.add_argument('-m', '--midi', type=str)   #If there is a midi file to base start and stop times off of
 parser.add_argument('-s', '--sr', type=int, default=44100)
 args = parser.parse_args()
 
 if (args.midi):
-    transients = transients_from_midi(args.midi, args.input)
+    transients = transients_from_midi(args.midi, args.infile)
 else:
-    transients = transients_from_sound_file(args.input)
+    transients = transients_from_sound_file(args.infile)
 
-sounds = sort_sounds(transients, args.input)
-create_midi_from_sound_list(sounds)
+sounds = sort_sounds(transients, args.infile)
+create_midi_from_sound_list(sounds, args.outfile)

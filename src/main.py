@@ -12,9 +12,15 @@ parser.add_argument('-s', '--sr', type=int, default=44100)
 args = parser.parse_args()
 
 if (args.midi):
-    transients = transients_from_midi(args.midi, args.infile)
+    transientTimes, transientSamples = transients_from_midi(args.midi, args.infile)
 else:
-    transients = transients_from_sound_file(args.infile)
+    transientTimes, transientSamples = transients_from_sound_file(args.infile)
 
-sounds = sort_sounds(transients, args.infile)
-create_midi_from_sound_list(sounds, args.outfile)
+rms = []
+for sample in transientSamples:
+    rms.append(librosa.feature.rms(y=sample)[0])
+    
+print(rms)
+
+sortedSounds = sort_sounds(transientTimes, transientSamples)
+create_midi_from_sound_list(sortedSounds, args.outfile)

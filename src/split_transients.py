@@ -13,6 +13,12 @@ def ezLoad(soundFile, sr = None):
         y, sr = librosa.load(soundFile)
     return y, sr
 
+def transient_samples_from_times(transientTimes, y):
+    transientSamples = []
+    for (start, stop) in transientTimes:
+        transientSamples.append(y[start:stop])
+    return transientSamples
+
 def transients_from_onsets(onset_samples):
     """Takes a list of onset times for an audio file and returns the list of start and stop times for that audio file
 
@@ -24,10 +30,10 @@ def transients_from_onsets(onset_samples):
     """
     starts = onset_samples[0:-1]
     stops = onset_samples[1:]
-    transients = []
+    transientTimes = []
     for s in range(len(starts)):
-        transients.append((starts[s], stops[s]))
-    return transients
+        transientTimes.append((starts[s], stops[s]))
+    return transientTimes
 
 def transients_from_sound_file(fileName, sr=44100):
     """Takes the path to an audio file
@@ -48,8 +54,9 @@ def transients_from_sound_file(fileName, sr=44100):
 
     onset_samples = list(librosa.frames_to_samples(onset_frames))
     onset_samples = np.concatenate(onset_samples, len(y))
-    transients =  transients_from_onsets(onset_samples)
-    return transients
+    transientTimes =  transients_from_onsets(onset_samples)
+    transientSamples = transient_samples_from_times(transientTimes, y)
+    return transientTimes, transientSamples
 
 def transients_from_midi(midiFile, soundFile, sr=44100):
     """Takes the path to an audio file, as well as the path to a midi file
@@ -74,8 +81,9 @@ def transients_from_midi(midiFile, soundFile, sr=44100):
     onsets = midi_data.get_onsets()
     arr = np.array(onsets)
     samples = librosa.core.time_to_samples(times=arr, sr=sr)
-    transients = transients_from_onsets(samples)
-    return transients    
+    transientTimes = transients_from_onsets(samples)
+    transientSamples = transient_samples_from_times(transientTimes)
+    return transientTimes, transientSamples
 
 def main():
     soundFile = "../sound-files/first-four-seconds.wav"

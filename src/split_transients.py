@@ -82,7 +82,7 @@ def transients_from_midi(midiFile, soundFile, sr=44100):
     arr = np.array(onsets)
     samples = librosa.core.time_to_samples(times=arr, sr=sr)
     transientTimes = transients_from_onsets(samples)
-    transientSamples = transient_samples_from_times(transientTimes)
+    transientSamples = transient_samples_from_times(transientTimes, y)
     return transientTimes, transientSamples
 
 def main():

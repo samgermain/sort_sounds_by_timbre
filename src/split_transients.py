@@ -5,6 +5,7 @@ import numpy as np
 import os
 import soundfile as sf
 import pretty_midi
+import shutil
 
 def ezLoad(soundFile, sr = None):
     if sr:
@@ -84,6 +85,15 @@ def transients_from_midi(midiFile, soundFile, sr=44100):
     transientTimes = transients_from_onsets(samples)
     transientSamples = transient_samples_from_times(transientTimes, y)
     return transientTimes, transientSamples
+
+def save_transients(transientSamples, outputFolder, sr):
+    if (os.path.exists(outputFolder)):
+        shutil.rmtree(outputFolder)
+    os.mkdir(outputFolder)
+
+    for sample in range(len(transientSamples)):
+        filename = os.path.join(outputFolder, 'sample_' + str(sample) + '.wav')
+        sf.write(filename, transientSamples[sample], sr)
 
 def main():
     soundFile = "../sound-files/first-four-seconds.wav"

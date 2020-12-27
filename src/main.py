@@ -1,7 +1,7 @@
-import librosa
+from librosa import frames_to_time
 import argparse
 from split_transients import transients_from_sound_file, transients_from_midi
-from sort_sounds import sort_sounds
+from sort_sounds import sortSoundsByCoef, sortSoundsByTimeAndCoef
 from create_midi_files import create_midi_from_sound_list
 
 parser = argparse.ArgumentParser(description='Create a plot of each sound in the sound, sorted by sound similarity. x=time')
@@ -16,11 +16,9 @@ if (args.midi):
 else:
     transientTimes, transientSamples = transients_from_sound_file(args.infile)
 
-rms = []
-for sample in transientSamples:
-    rms.append(librosa.feature.rms(y=sample)[0])
-    
-print(rms)
+# rms = []
+# for sample in transientSamples:
+#     rms.append(librosa.feature.rms(y=sample)[0])
 
-sortedSounds = sort_sounds(transientTimes, transientSamples)
+sortedSounds = sortSoundsByTimeAndCoef(transientTimes, transientSamples)
 create_midi_from_sound_list(sortedSounds, args.outfile)

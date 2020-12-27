@@ -81,7 +81,7 @@ def transients_from_midi(midiFile, soundFile, sr=44100):
     midi_data = pretty_midi.PrettyMIDI(midiFile)
     onsets = midi_data.get_onsets()
     arr = np.array(onsets)
-    samples = librosa.core.time_to_samples(times=arr, sr=sr)
+    samples = librosa.core.time_to_samples(times=arr, sr=sr)            #It doesn't make sense why this isn't time_to_frames
     transientTimes = transients_from_onsets(samples)
     transientSamples = transient_samples_from_times(transientTimes, y)
     return transientTimes, transientSamples
@@ -100,6 +100,4 @@ def main():
     midiFile = "../midi/first-four-seconds.mid"
     transients = transients_from_sound_file(soundFile)
     midiTransients = transients_from_midi(midiFile, soundFile)
-    print(transients)
-    print(midiTransients)
 

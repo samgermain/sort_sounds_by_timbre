@@ -7,6 +7,7 @@ import librosa.display
 import matplotlib.pyplot as plt
 import numpy as np
 import math
+import json
 from os import path
 from typing import List
 
@@ -74,21 +75,7 @@ def draw_specs(specList: List[Spec], attribute: str, title: str):
 # sound, but with one effect added. You can listen to all the sound files in
 # sequence at `assets/sound-files/full_clip_1.wav`
 
-sound_files_1 = [
-    '../assets/transients_1/4.wav',
-    '../assets/transients_1/6.wav',
-    '../assets/transients_1/1.wav',
-    '../assets/transients_1/11.wav',
-    '../assets/transients_1/13.wav',
-    '../assets/transients_1/9.wav',
-    '../assets/transients_1/3.wav',
-    '../assets/transients_1/7.wav',
-    '../assets/transients_1/12.wav',
-    '../assets/transients_1/2.wav',
-    '../assets/transients_1/5.wav',
-    '../assets/transients_1/10.wav',
-    '../assets/transients_1/8.wav'
-]
+sound_files_1 = json.load(open('./data/sound_files_1.json'))
 mfccs_1 = get_mfccs(sound_files_1)
 
 
@@ -124,7 +111,7 @@ plt.savefig('sorted_transients_1.png')
 #   warnings.warn(
 # ```
 
-sound_files_2 = [f"../assets/transients_2/{num}.wav" for num in range(0, 40)]
+sound_files_2 = json.load(open('./data/sound_files_2.json'))
 mfccs_2 = get_mfccs(sound_files_2)
 
 # Here I have manually sorted the sounds by similarity according to how I

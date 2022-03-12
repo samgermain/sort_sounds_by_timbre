@@ -6,6 +6,7 @@ import math
 import json
 from os import path
 from typing import List
+from pprint import pprint
 
 '''
 I came up with a method, not sure if it does exactly what you are hoping but for your first dataset it is very close. 
@@ -76,8 +77,11 @@ def spectra_of_spectra(mfcc):
     '''
     # first calculate the psd
     fft = np.fft.fft(mfcc.y)
+    pprint(fft)
     fft = fft[:len(fft)//2+1]
+    pprint(fft)
     psd1 = np.real(fft * np.conj(fft))
+    pprint(psd1)
     # then calculate the psd of the psd
     fft = np.fft.fft(psd1/sum(psd1))
     fft = fft[:len(fft)//2+1]
@@ -94,15 +98,16 @@ def sort_mfccs(mfccs):
 
 sound_files_1 = json.load(open('./data/sound_files_1.json'))
 mfccs_1 = get_mfccs(sound_files_1)
-sorted_mfccs_1 = sort_mfccs(mfccs_1)
-draw_specs(sorted_mfccs_1, 'mfcc', 'spectra_of_spectra_transients_1 - ')
-plt.savefig('spectra_of_spectra_transients_1.png')
+spectra_of_spectra(mfccs_1[0])
+# sorted_mfccs_1 = sort_mfccs(mfccs_1)
+# draw_specs(sorted_mfccs_1, 'mfcc', 'spectra_of_spectra_transients_1 - ')
+# plt.savefig('spectra_of_spectra_transients_1.png')
 
-sound_files_2 = json.load(open('./data/sound_files_2.json'))
-mfccs_2 = get_mfccs(sound_files_2)
-sorted_mfccs_2 = sort_mfccs(mfccs_2)
-draw_specs(sorted_mfccs_2, 'mfcc', 'spectra_of_spectra_transients_2 - ')
-plt.savefig('spectra_of_spectra_transients_2.png')
+# sound_files_2 = json.load(open('./data/sound_files_2.json'))
+# mfccs_2 = get_mfccs(sound_files_2)
+# sorted_mfccs_2 = sort_mfccs(mfccs_2)
+# draw_specs(sorted_mfccs_2, 'mfcc', 'spectra_of_spectra_transients_2 - ')
+# plt.savefig('spectra_of_spectra_transients_2.png')
 
 '''
 Last point regarding question in code re: UserWarning

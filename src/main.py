@@ -17,22 +17,27 @@ def ez_load(sound_file: str, sr: Optional[int] = None):
 
 
 parser = argparse.ArgumentParser(
-    description='Create a plot of each sound in the sound, sorted by sound similarity. x=time'
+    description=(
+        'Create a plot of each sound in the sound, sorted by sound similarity. '
+        '-i infile'
+        '-o outfile'
+        '-m output from Ableton right click -> slice to new midi track'
+        '-s sample rate'
+    )
 )
 parser.add_argument(
     '-i',
     '--infile',
     type=str,
-    default='../assets/sound-files/first-four-seconds.wav'  # The sound file to read from
 )
 parser.add_argument(
     '-o',
     '--outfile',
     type=str,
-    default='../assets/midi/midi_file.mid'  # The midi file to write to
+    default='outfile.mid',  # The midi file to write to
 )
 # If there is a midi file to base start and stop times off of
-parser.add_argument('-m', '--midi', type=str)
+parser.add_argument('-m', '--midi', type=str, default=None)
 parser.add_argument('-s', '--sr', type=int, default=44100)
 args = parser.parse_args()
 

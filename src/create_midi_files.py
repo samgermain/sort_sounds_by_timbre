@@ -33,7 +33,7 @@ def create_track_from_time(
 
 def create_midi_from_locations(
     locations: List[Tuple[int, int]],
-    outfile: str = "result.mid"
+    outfile: str = "outfile.mid"
 ):
     """
     Takes a list of start and stop times for sounds, and creates a midi when each sound is a track

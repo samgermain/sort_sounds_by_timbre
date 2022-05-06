@@ -61,10 +61,10 @@ def get_transient_locations(
 ) -> List[Tuple[int, int]]:
     """
     Takes the path to an audio file and returns the list of start and stop times for that
-    audio file as a frame rate. The midi file would have the correct start and stop times.
+    audio file as a frame rate. The midi file would have the correct start and stop times
 
-    :param midi_file: The path to an audio file
-    :param sr: The sample rate of the audio file. Defaults to 44100.
+    :param midi_file: The path to a midi file (output from Ableton right click -> slice to new midi track)
+    :param sr: The sample rate of the audio file
 
     :return: A list of start and stop times for each sound change
     """

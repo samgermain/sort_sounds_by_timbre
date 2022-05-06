@@ -1,8 +1,8 @@
 import argparse
 
 import librosa
-from sortSounds import sort_locations_by_time_and_coef
-from splitTransients import get_transient_locations
+from sort_sounds import sort_locations_by_time_and_coef
+from split_transients import get_transient_locations
 
 from create_midi_files import create_midi_from_locations
 

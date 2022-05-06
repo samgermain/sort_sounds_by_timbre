@@ -1,20 +1,36 @@
-import librosa
 import argparse
+
+import librosa
+from sortSounds import sort_locations_by_time_and_coef
 from splitTransients import get_transient_locations
-from sortSounds import sort_locations_by_coef, sort_locations_by_time_and_coef
+
 from create_midi_files import create_midi_from_locations
 
-def ez_load(sound_file, sr = None):
+
+def ez_load(sound_file, sr=None):
     if sr:
         y, sr = librosa.load(sound_file, sr=sr)
     else:
         y, sr = librosa.load(sound_file)
     return y, sr
 
-parser = argparse.ArgumentParser(description='Create a plot of each sound in the sound, sorted by sound similarity. x=time')
-parser.add_argument('-i', '--infile', type=str, default='../assets/sound-files/first-four-seconds.wav')    #The sound file to read from
-parser.add_argument('-o', '--outfile', type=str, default='../assets/midi/midi_file.mid')   #The midi file to write to
-parser.add_argument('-m', '--midi', type=str)   #If there is a midi file to base start and stop times off of
+
+parser = argparse.ArgumentParser(
+    description='Create a plot of each sound in the sound, sorted by sound similarity. x=time')
+parser.add_argument(
+    '-i',
+    '--infile',
+    type=str,
+    default='../assets/sound-files/first-four-seconds.wav'  # The sound file to read from
+)
+parser.add_argument(
+    '-o',
+    '--outfile',
+    type=str,
+    default='../assets/midi/midi_file.mid'  # The midi file to write to
+)
+# If there is a midi file to base start and stop times off of
+parser.add_argument('-m', '--midi', type=str)
 parser.add_argument('-s', '--sr', type=int, default=44100)
 args = parser.parse_args()
 

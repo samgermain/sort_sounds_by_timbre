@@ -1,7 +1,7 @@
-import pretty_midi
-import librosa
-
 from typing import List, Tuple
+
+import librosa
+import pretty_midi
 
 
 def create_track_from_time(

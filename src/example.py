@@ -2,14 +2,15 @@
 # https://stackoverflow.com/questions/64580500/compare-the-similarity-of-2-sounds-using-python-librosa
 # https://stackoverflow.com/questions/65247230/plot-the-timeframe-of-each-unique-sound-loop-in-a-song-with-rows-sorted-by-soun
 
+import json
+import math
+from os import path
+from typing import List
+
 import librosa
 import librosa.display
 import matplotlib.pyplot as plt
 import numpy as np
-import math
-import json
-from os import path
-from typing import List
 
 
 class Spec:
@@ -85,10 +86,11 @@ mfccs_1 = get_mfccs(sound_files_1)
 # on the timbre of the sound.
 
 def sort_sound_files(sound_files: List[str]):
-    # TODO: Complete this function. The soundfiles must be sorted based on the content in the file, do not use the name of the file
+    # TODO: Complete this function. The soundfiles must be sorted based on the content in the file,
+    # do not use the name of the file
 
     # This is the correct order that the sounds should be sorted in
-    return [f"../assets/transients_1/{num}.wav" for num in range(1, 14)]  # TODO: remove(or comment) once method is completed
+    return [f"../assets/transients_1/{num}.wav" for num in range(1, 14)]  # TODO: remove once method is completed
 ##################################################################
 
 

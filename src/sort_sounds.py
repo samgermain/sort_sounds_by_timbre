@@ -1,9 +1,25 @@
 # import matplotlib.pyplot as plt
 from typing import List, Tuple
 
-import librosa
 import numpy as np
+
 from split_transients import locations_to_samples, locations_to_spectrograms
+
+
+def spectra_of_spectra(sample: np.ndarray):
+    '''
+    Step 2: Calculate the PSD of the PSD and integrate (or really just sum):
+    Dividing by the length (normalizing) helps to compare different files of different lengths.
+    '''
+    # first calculate the psd
+    fft = np.fft.fft(sample)
+    fft = fft[:len(fft)//2+1]
+    psd1 = np.real(fft * np.conj(fft))
+    # then calculate the psd of the psd
+    fft = np.fft.fft(psd1/sum(psd1))
+    fft = fft[:len(fft)//2+1]
+    psd = np.real(fft * np.conj(fft))
+    return(np.sum(psd)/len(psd))
 
 
 def get_similarity_coefficients(S: List[np.ndarray]) -> List[List[float]]:
@@ -28,8 +44,12 @@ def get_similarity_coefficients(S: List[np.ndarray]) -> List[List[float]]:
     return(similarity_coefficents)
 
 
-def sort_locations_by_coef(y: np.ndarray, locations: List[Tuple[int, int]]) -> List[List[Tuple[int, int]]]:
+def sort_locations_by_coef(
+    y: np.ndarray,
+    locations: List[Tuple[int, int]]
+) -> List[List[Tuple[int, int]]]:
     """
+    # ! Bad
     Sorts all the sounds in a sound file by sound similarity. Longer sounds are cropped to the length of the
         shortest sounds
     :param samples: The clips of the sound file
@@ -46,7 +66,9 @@ def sort_locations_by_time_and_coef(
     y: np.ndarray,
     locations: List[Tuple[int, int]]
 ):
-    """Sounds are only compared to eachother if they are the same length in time
+    """
+    # ! Bad
+    Sounds are only compared to eachother if they are the same length in time
 
     :param y:
     :param locations: List of start and stop times for sounds
@@ -77,14 +99,18 @@ def sort_locations_by_time_and_coef(
     return np.array(sorted_locations)
 
 
-def convert_samples_to_mfcc(y, sr, locations):
+def sort_locations_by_spectra_of_spectra(
+    y: np.ndarray,
+    locations: List[Tuple[int, int]]
+):
+    """
+    :param y: sound file processed by librosa
+    :param locations: List of start and stop times for sounds
+    """
+
     samples = locations_to_samples(y, locations)
-    # mfcc = librosa.feature.mfcc(samples[0], n_mfcc=13, sr=sr)
-    # delta_mfcc = librosa.feature.delta(mfcc)
-    # delta2_mfcc = librosa.feature.delta(mfcc, order=2)
-    # return mfcc, delta_mfcc, delta2_mfcc
-    mfccs = [librosa.feature.mfcc(s, n_mfcc=13, sr=sr) for s in samples]
-    delta_mfccs = [librosa.feature.delta(m, mode="nearest") for m in mfccs]
-    delta2_mfccs = [
-        librosa.feature.delta(m, mode="nearest", order=2) for m in mfccs]
-    return mfccs, delta_mfccs, delta2_mfccs
+    values = [spectra_of_spectra(sample) for sample in samples]
+    sorted_order = [
+        i[0] for i in sorted(enumerate(values), key=lambda x:x[1], reverse=True)
+    ]
+    return([locations[i] for i in sorted_order])

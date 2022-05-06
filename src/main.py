@@ -1,13 +1,14 @@
 import argparse
+from typing import Optional
 
 import librosa
-from sort_sounds import sort_locations_by_time_and_coef
-from split_transients import get_transient_locations
 
 from create_midi_files import create_midi_from_locations
+from sort_sounds import sort_locations_by_spectra_of_spectra
+from split_transients import get_transient_locations
 
 
-def ez_load(sound_file, sr=None):
+def ez_load(sound_file: str, sr: Optional[int] = None):
     if sr:
         y, sr = librosa.load(sound_file, sr=sr)
     else:
@@ -41,5 +42,5 @@ if (args.midi):
 else:
     transient_locations = get_transient_locations(y)
 
-sorted_locations = sort_locations_by_time_and_coef(y, transient_locations)
+sorted_locations = sort_locations_by_spectra_of_spectra(y, transient_locations)
 create_midi_from_locations(sorted_locations, args.outfile)

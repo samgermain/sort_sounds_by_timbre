@@ -1,8 +1,6 @@
 Run the program by executing
 
-`python main.py`
-
-from within the `src` folder
+`python src/main.py`
 
 
 ARGUMENTS

@@ -6,13 +6,20 @@ import math
 import json
 from os import path
 from typing import List
+# from pprint import pprint
+
 
 '''
-I came up with a method, not sure if it does exactly what you are hoping but for your first dataset it is very close. 
-Basically I'm looking at the power spectral density of the power spectral density of your .wav files and sorting by the normalized integral of that. 
-(I have no good signal processing reason for doing this. The PSD gives you an idea of how much energy is at each frequency. I initially tried sorting by the PSD and got bad results. Thinking that as you treat the files you were creating more variability, I thought that would alter variation in the spectral density in this way and just tried it.) 
+I came up with a method, not sure if it does exactly what you are hoping but for your first dataset it is very close.
+Basically I'm looking at the power spectral density of the power spectral density of your .wav files and sorting by the
+normalized integral of that. (I have no good signal processing reason for doing this.
+The PSD gives you an idea of how much energy is at each frequency.
+I initially tried sorting by the PSD and got bad results.
+Thinking that as you treat the files you were creating more variability,
+I thought that would alter variation in the spectral density in this way and just tried it.)
 If this does what you need, I hope you can find a justification for the approach.
 '''
+
 
 class Spec:
     name: str = ''
@@ -28,7 +35,7 @@ class MFCC(Spec):
 
     def __init__(self, soundFile: str):
         self.name = path.basename(soundFile)
-        self.y, sr = librosa.load(soundFile, sr=self.sr) # <--- This line is changed
+        self.y, sr = librosa.load(soundFile, sr=self.sr)  # <--- This line is changed
         self.mfcc = librosa.feature.mfcc(self.y, n_mfcc=self.n_mfcc, sr=sr)
         self.delta_mfcc = librosa.feature.delta(self.mfcc, mode="nearest")
         self.delta2_mfcc = librosa.feature.delta(self.mfcc, mode="nearest", order=2)
@@ -36,16 +43,14 @@ class MFCC(Spec):
 
 def get_mfccs(sound_files: List[str]) -> List[MFCC]:
     '''
-        :param sound_files: Each item is a path to a sound file (wav, mp3, ...)
+    :param sound_files: Each item is a path to a sound file (wav, mp3, ...)
     '''
     mfccs = [MFCC(sound_file) for sound_file in sound_files]
     return mfccs
 
 
 def draw_specs(specList: List[Spec], attribute: str, title: str):
-    '''
-        Takes a list of same type audio features, and draws a spectrogram for each one
-    '''
+    '''Takes a list of same type audio features, and draws a spectrogram for each one'''
     def draw_spec(spec: Spec, attribute: str, fig: plt.Figure, ax: plt.Axes):
         img = librosa.display.specshow(
             librosa.amplitude_to_db(getattr(spec, attribute), ref=np.max),
@@ -87,13 +92,13 @@ def spectra_of_spectra(mfcc):
 
 def sort_mfccs(mfccs):
     values = [spectra_of_spectra(mfcc) for mfcc in mfccs]
-    sorted_order = [i[0] for i in sorted(enumerate(values), key=lambda x:x[1], reverse = True)]
+    sorted_order = [i[0] for i in sorted(enumerate(values), key=lambda x:x[1], reverse=True)]
     return([mfccs[i] for i in sorted_order])
-
 
 
 sound_files_1 = json.load(open('./data/sound_files_1.json'))
 mfccs_1 = get_mfccs(sound_files_1)
+spectra_of_spectra(mfccs_1[0])
 sorted_mfccs_1 = sort_mfccs(mfccs_1)
 draw_specs(sorted_mfccs_1, 'mfcc', 'spectra_of_spectra_transients_1 - ')
 plt.savefig('spectra_of_spectra_transients_1.png')

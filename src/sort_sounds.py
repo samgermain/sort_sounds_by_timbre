@@ -85,6 +85,6 @@ def convert_samples_to_mfcc(y, sr, locations):
     # return mfcc, delta_mfcc, delta2_mfcc
     mfccs = [librosa.feature.mfcc(s, n_mfcc=13, sr=sr) for s in samples]
     delta_mfccs = [librosa.feature.delta(m, mode="nearest") for m in mfccs]
-    delta2_mfccs = [librosa.feature.delta(
-        m, mode="nearest", order=2) for m in mfccs]
+    delta2_mfccs = [
+        librosa.feature.delta(m, mode="nearest", order=2) for m in mfccs]
     return mfccs, delta_mfccs, delta2_mfccs

@@ -17,7 +17,8 @@ def ez_load(sound_file: str, sr: Optional[int] = None):
 
 
 parser = argparse.ArgumentParser(
-    description='Create a plot of each sound in the sound, sorted by sound similarity. x=time')
+    description='Create a plot of each sound in the sound, sorted by sound similarity. x=time'
+)
 parser.add_argument(
     '-i',
     '--infile',

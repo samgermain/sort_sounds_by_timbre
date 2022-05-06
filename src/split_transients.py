@@ -25,11 +25,11 @@ def get_onsets(y: np.ndarray, sr: int):
     return librosa.frames_to_samples(onsets)
 
 
-def onsets_to_transient_locations(onset_samples: List[int]):
+def onsets_to_transient_locations(onset_samples: List[int]) -> np.ndarray:
     """Takes a list of onset times for an audio file and returns the list of start and stop times for that audio file
     :param [int] onset_samples: I don't really know what these are actually.
         I thought they were start times for each sound change but I don't know
-    :return [(int, int)]: A list of start and stop times for each sound change
+    :return: A list of start and stop times for each sound change
     """
 
     starts = onset_samples[0:-1]
@@ -48,10 +48,14 @@ def locations_to_samples(y: np.ndarray, transient_locations):
     return transient_samples
 
 
-def get_transient_locations(y: np.ndarray, midi_file: Optional[str] = None, sr: int = 44100) -> [(int, int)]:
-    """Takes the path to an audio file
-    and returns the list of start and stop times for that audio file
-    as a frame rate. The midi file would have the correct start and stop times.
+def get_transient_locations(
+    y: np.ndarray,
+    midi_file: Optional[str] = None,
+    sr: int = 44100
+) -> np.ndarray:
+    """
+    Takes the path to an audio file and returns the list of start and stop times for that
+    audio file as a frame rate. The midi file would have the correct start and stop times.
 
     :param midi_file: The path to an audio file
     :param sr: The sample rate of the audio file. Defaults to 44100.
@@ -67,7 +71,12 @@ def get_transient_locations(y: np.ndarray, midi_file: Optional[str] = None, sr: 
     return transient_locations
 
 
-def save_transients(y: np.ndarray, output_folder: str, midi_file: Optional[str] = None, sr: int = 44100):
+def save_transients(
+    y: np.ndarray,
+    output_folder: str,
+    midi_file: Optional[str] = None,
+    sr: int = 44100
+) -> None:
     if (os.path.exists(output_folder)):
         shutil.rmtree(output_folder)
     os.mkdir(output_folder)

@@ -3,10 +3,10 @@ from typing import List, Tuple
 
 import librosa
 import numpy as np
-from splitTransients import locations_to_samples, locations_to_spectrograms
+from split_transients import locations_to_samples, locations_to_spectrograms
 
 
-def get_similarity_coefficients(S: List[Tuple[List[float], List[float]]]) -> List[List[float]]:
+def get_similarity_coefficients(S: List[np.ndarray]) -> List[List[float]]:
     """
     Takes a list of spectrograms and returns a list of lists where each sublist contains the similarity coefficents
         between the corresponding list in S and every other spectrogram in S
@@ -30,7 +30,7 @@ def get_similarity_coefficients(S: List[Tuple[List[float], List[float]]]) -> Lis
 
 def sort_locations_by_coef(y: np.ndarray, locations: List[Tuple[int, int]]) -> List[List[Tuple[int, int]]]:
     """
-    Sorts all the sounds in a sound file by sound similarity. Longer sounds are cropped to the length of the 
+    Sorts all the sounds in a sound file by sound similarity. Longer sounds are cropped to the length of the
         shortest sounds
     :param samples: The clips of the sound file
     :param times: A list of the start and stop times of each sound in a sound_file
@@ -62,14 +62,14 @@ def sort_locations_by_time_and_coef(y: np.ndarray, locations: List[Tuple[int, in
             if S[i].shape[1] == length
         ]
         # Spectrograms for sounds of the same length
-        subSpec = [s for s, _ in sub_list]
+        sub_spec = [s for s, _ in sub_list]
         # Start/stop times for sounds of the same length
         sub_locations = [l for _, l in sub_list]
 
-        sc = get_similarity_coefficients(subSpec)
+        sc = get_similarity_coefficients(sub_spec)
         # In the end version, there may be multiple sounds on the same line
-        newSortedLocations = [[s] for _, s in sorted(zip(sc, sub_locations))]
-        sorted_locations += newSortedLocations
+        new_sorted_locations = [[s] for _, s in sorted(zip(sc, sub_locations))]
+        sorted_locations += new_sorted_locations
 
     return np.array(sorted_locations)
 

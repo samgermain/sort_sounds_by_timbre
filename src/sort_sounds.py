@@ -42,12 +42,11 @@ def sort_locations_by_coef(y: np.ndarray, locations: List[Tuple[int, int]]) -> L
     return [[l] for _, l in sorted(zip(sc[0], locations))]
 
 
-def sort_locations_by_time_and_coef(y, locations):
+def sort_locations_by_time_and_coef(y: np.ndarray, locations: List[Tuple[int, int]]):
     """Sounds are only compared to eachother if they are the same length in time
 
-    Args:
-        times ([type]): List of start and stop times for sounds
-        samples ([type]): The sounds that correspond to those start and stop times
+    :param y:
+    :param locations: List of start and stop times for sounds
     """
 
     S = locations_to_spectrograms(y, locations)

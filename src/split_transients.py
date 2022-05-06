@@ -53,7 +53,7 @@ def get_transient_locations(y: np.ndarray, midi_file: Optional[str] = None, sr: 
     and returns the list of start and stop times for that audio file
     as a frame rate. The midi file would have the correct start and stop times.
 
-    :param fileName: The path to an audio file
+    :param midi_file: The path to an audio file
     :param sr: The sample rate of the audio file. Defaults to 44100.
 
     :return: A list of start and stop times for each sound change

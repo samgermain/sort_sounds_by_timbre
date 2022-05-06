@@ -42,7 +42,10 @@ def sort_locations_by_coef(y: np.ndarray, locations: List[Tuple[int, int]]) -> L
     return [[l] for _, l in sorted(zip(sc[0], locations))]
 
 
-def sort_locations_by_time_and_coef(y: np.ndarray, locations: List[Tuple[int, int]]):
+def sort_locations_by_time_and_coef(
+    y: np.ndarray,
+    locations: List[Tuple[int, int]]
+):
     """Sounds are only compared to eachother if they are the same length in time
 
     :param y:

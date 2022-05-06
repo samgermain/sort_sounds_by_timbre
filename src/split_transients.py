@@ -25,7 +25,7 @@ def get_onsets(y: np.ndarray, sr: int):
     return librosa.frames_to_samples(onsets)
 
 
-def onsets_to_transient_locations(onset_samples: List[int]) -> np.ndarray:
+def onsets_to_transient_locations(onset_samples: List[int]) -> List[List[int]]:
     """Takes a list of onset times for an audio file and returns the list of start and stop times for that audio file
     :param [int] onset_samples: I don't really know what these are actually.
         I thought they were start times for each sound change but I don't know
@@ -37,7 +37,7 @@ def onsets_to_transient_locations(onset_samples: List[int]) -> np.ndarray:
     transient_times = []
     for s in range(len(starts)):
         transient_times.append([starts[s], stops[s]])
-    return np.array(transient_times)
+    return transient_times
 
 
 def locations_to_samples(y: np.ndarray, transient_locations):
@@ -52,7 +52,7 @@ def get_transient_locations(
     y: np.ndarray,
     midi_file: Optional[str] = None,
     sr: int = 44100
-) -> np.ndarray:
+) -> List[List[int]]:
     """
     Takes the path to an audio file and returns the list of start and stop times for that
     audio file as a frame rate. The midi file would have the correct start and stop times.

@@ -1,18 +1,24 @@
+import json
+import math
+from os import path
+from typing import List
+
 import librosa
 import librosa.display
 import matplotlib.pyplot as plt
 import numpy as np
-import math
-import json
-from os import path
-from typing import List
-from pprint import pprint
+
+# from pprint import pprint
 
 
 '''
-I came up with a method, not sure if it does exactly what you are hoping but for your first dataset it is very close. 
-Basically I'm looking at the power spectral density of the power spectral density of your .wav files and sorting by the normalized integral of that. 
-(I have no good signal processing reason for doing this. The PSD gives you an idea of how much energy is at each frequency. I initially tried sorting by the PSD and got bad results. Thinking that as you treat the files you were creating more variability, I thought that would alter variation in the spectral density in this way and just tried it.) 
+I came up with a method, not sure if it does exactly what you are hoping but for your first dataset it is very close.
+Basically I'm looking at the power spectral density of the power spectral density of your .wav files and sorting by the
+normalized integral of that. (I have no good signal processing reason for doing this.
+The PSD gives you an idea of how much energy is at each frequency.
+I initially tried sorting by the PSD and got bad results.
+Thinking that as you treat the files you were creating more variability,
+I thought that would alter variation in the spectral density in this way and just tried it.)
 If this does what you need, I hope you can find a justification for the approach.
 '''
 
@@ -29,9 +35,9 @@ class MFCC(Spec):
     delta2_mfcc: np.ndarray  # delta2 Mel-frequency cepstral coefficient
     n_mfcc: int = 13
 
-    def __init__(self, soundFile: str):
-        self.name = path.basename(soundFile)
-        self.y, sr = librosa.load(soundFile, sr=self.sr) # <--- This line is changed
+    def __init__(self, sound_file: str):
+        self.name = path.basename(sound_file)
+        self.y, sr = librosa.load(sound_file, sr=self.sr)  # <--- This line is changed
         self.mfcc = librosa.feature.mfcc(self.y, n_mfcc=self.n_mfcc, sr=sr)
         self.delta_mfcc = librosa.feature.delta(self.mfcc, mode="nearest")
         self.delta2_mfcc = librosa.feature.delta(self.mfcc, mode="nearest", order=2)
@@ -45,7 +51,7 @@ def get_mfccs(sound_files: List[str]) -> List[MFCC]:
     return mfccs
 
 
-def draw_specs(specList: List[Spec], attribute: str, title: str):
+def draw_specs(spec_list: List[Spec], attribute: str, title: str):
     '''Takes a list of same type audio features, and draws a spectrogram for each one'''
     def draw_spec(spec: Spec, attribute: str, fig: plt.Figure, ax: plt.Axes):
         img = librosa.display.specshow(
@@ -57,17 +63,17 @@ def draw_specs(specList: List[Spec], attribute: str, title: str):
         ax.set_title(title + str(spec.name))
         fig.colorbar(img, ax=ax, format="%+2.0f dB")
 
-    specLen = len(specList)
-    fig, axs = plt.subplots(math.ceil(specLen/3), 3, figsize=(30, specLen * 2))
-    for spec in range(0, len(specList), 3):
+    spec_len = len(spec_list)
+    fig, axs = plt.subplots(math.ceil(spec_len/3), 3, figsize=(30, spec_len * 2))
+    for spec in range(0, len(spec_list), 3):
 
-        draw_spec(specList[spec], attribute, fig, axs.flat[spec])
+        draw_spec(spec_list[spec], attribute, fig, axs.flat[spec])
 
-        if (spec+1 < len(specList)):
-            draw_spec(specList[spec+1], attribute, fig, axs.flat[spec+1])
+        if (spec+1 < len(spec_list)):
+            draw_spec(spec_list[spec+1], attribute, fig, axs.flat[spec+1])
 
-        if (spec+2 < len(specList)):
-            draw_spec(specList[spec+2], attribute, fig, axs.flat[spec+2])
+        if (spec+2 < len(spec_list)):
+            draw_spec(spec_list[spec+2], attribute, fig, axs.flat[spec+2])
 
 
 def spectra_of_spectra(mfcc):
@@ -88,7 +94,7 @@ def spectra_of_spectra(mfcc):
 
 def sort_mfccs(mfccs):
     values = [spectra_of_spectra(mfcc) for mfcc in mfccs]
-    sorted_order = [i[0] for i in sorted(enumerate(values), key=lambda x:x[1], reverse = True)]
+    sorted_order = [i[0] for i in sorted(enumerate(values), key=lambda x:x[1], reverse=True)]
     return([mfccs[i] for i in sorted_order])
 
 

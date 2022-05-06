@@ -2,10 +2,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy.fft
 
-def sinWav(amp, freq, time, phase=0):
+def sin_wav(amp, freq, time, phase=0):
     return amp * np.sin(2 * np.pi * (freq * time - phase))
 
-def plotFFT(f, speriod, time):
+def plot_fft(f, speriod, time):
     """Plots a fast fourier transform
 
     Args:
@@ -38,11 +38,11 @@ def main():
     }
 
     signal = np.concatenate([
-        sinWav(amp=0.25, freq=2, time=time[0]),
-        sinWav(amp=1, freq=2, time=time[1]),
-        sinWav(amp=0.5, freq=2, time=time[2])
+        sin_wav(amp=0.25, freq=2, time=time[0]),
+        sin_wav(amp=1, freq=2, time=time[1]),
+        sin_wav(amp=0.5, freq=2, time=time[2])
     ])   # generate signal
 
-    plotFFT(signal, speriod, 12)
+    plot_fft(signal, speriod, 12)
 
 main()

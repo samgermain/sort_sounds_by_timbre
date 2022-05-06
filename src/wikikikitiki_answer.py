@@ -33,9 +33,9 @@ class MFCC(Spec):
     delta2_mfcc: np.ndarray  # delta2 Mel-frequency cepstral coefficient
     n_mfcc: int = 13
 
-    def __init__(self, soundFile: str):
-        self.name = path.basename(soundFile)
-        self.y, sr = librosa.load(soundFile, sr=self.sr)  # <--- This line is changed
+    def __init__(self, sound_file: str):
+        self.name = path.basename(sound_file)
+        self.y, sr = librosa.load(sound_file, sr=self.sr)  # <--- This line is changed
         self.mfcc = librosa.feature.mfcc(self.y, n_mfcc=self.n_mfcc, sr=sr)
         self.delta_mfcc = librosa.feature.delta(self.mfcc, mode="nearest")
         self.delta2_mfcc = librosa.feature.delta(self.mfcc, mode="nearest", order=2)
@@ -49,7 +49,7 @@ def get_mfccs(sound_files: List[str]) -> List[MFCC]:
     return mfccs
 
 
-def draw_specs(specList: List[Spec], attribute: str, title: str):
+def draw_specs(spec_list: List[Spec], attribute: str, title: str):
     '''Takes a list of same type audio features, and draws a spectrogram for each one'''
     def draw_spec(spec: Spec, attribute: str, fig: plt.Figure, ax: plt.Axes):
         img = librosa.display.specshow(
@@ -61,17 +61,17 @@ def draw_specs(specList: List[Spec], attribute: str, title: str):
         ax.set_title(title + str(spec.name))
         fig.colorbar(img, ax=ax, format="%+2.0f dB")
 
-    specLen = len(specList)
-    fig, axs = plt.subplots(math.ceil(specLen/3), 3, figsize=(30, specLen * 2))
-    for spec in range(0, len(specList), 3):
+    spec_len = len(spec_list)
+    fig, axs = plt.subplots(math.ceil(spec_len/3), 3, figsize=(30, spec_len * 2))
+    for spec in range(0, len(spec_list), 3):
 
-        draw_spec(specList[spec], attribute, fig, axs.flat[spec])
+        draw_spec(spec_list[spec], attribute, fig, axs.flat[spec])
 
-        if (spec+1 < len(specList)):
-            draw_spec(specList[spec+1], attribute, fig, axs.flat[spec+1])
+        if (spec+1 < len(spec_list)):
+            draw_spec(spec_list[spec+1], attribute, fig, axs.flat[spec+1])
 
-        if (spec+2 < len(specList)):
-            draw_spec(specList[spec+2], attribute, fig, axs.flat[spec+2])
+        if (spec+2 < len(spec_list)):
+            draw_spec(spec_list[spec+2], attribute, fig, axs.flat[spec+2])
 
 
 def spectra_of_spectra(mfcc):

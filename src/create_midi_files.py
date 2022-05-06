@@ -4,7 +4,7 @@ import librosa
 from typing import List, Tuple
 
 
-def createTrackFromTime(
+def create_track_from_time(
     intervals: List[Tuple[int, int]],
     note: str = 'A3',
     instrument_name: str = 'Acoustic Grand Piano',
@@ -31,7 +31,7 @@ def createTrackFromTime(
     return instrument
 
 
-def createMidiFromLocations(locations: List[Tuple[int, int]], outfile: str = "midi_file.mid"):
+def create_midi_from_locations(locations: List[Tuple[int, int]], outfile: str = "midi_file.mid"):
     """
     Takes a list of start and stop times for sounds, and creates a midi when each sound is a track
     :param locations: each tuple contains the start and stop times that this sound occurs
@@ -42,7 +42,7 @@ def createMidiFromLocations(locations: List[Tuple[int, int]], outfile: str = "mi
     # soundList = alignTimesToStart(soundList)
 
     for sound in locations:
-        track = createTrackFromTime(librosa.samples_to_time(sound))
+        track = create_track_from_time(librosa.samples_to_time(sound))
         midi.instruments.append(track)
 
     midi.write(outfile)

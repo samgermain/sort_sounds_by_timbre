@@ -8,12 +8,14 @@ from os import path
 from typing import List
 from pprint import pprint
 
+
 '''
 I came up with a method, not sure if it does exactly what you are hoping but for your first dataset it is very close. 
 Basically I'm looking at the power spectral density of the power spectral density of your .wav files and sorting by the normalized integral of that. 
 (I have no good signal processing reason for doing this. The PSD gives you an idea of how much energy is at each frequency. I initially tried sorting by the PSD and got bad results. Thinking that as you treat the files you were creating more variability, I thought that would alter variation in the spectral density in this way and just tried it.) 
 If this does what you need, I hope you can find a justification for the approach.
 '''
+
 
 class Spec:
     name: str = ''
@@ -37,16 +39,14 @@ class MFCC(Spec):
 
 def get_mfccs(sound_files: List[str]) -> List[MFCC]:
     '''
-        :param sound_files: Each item is a path to a sound file (wav, mp3, ...)
+    :param sound_files: Each item is a path to a sound file (wav, mp3, ...)
     '''
     mfccs = [MFCC(sound_file) for sound_file in sound_files]
     return mfccs
 
 
 def draw_specs(specList: List[Spec], attribute: str, title: str):
-    '''
-        Takes a list of same type audio features, and draws a spectrogram for each one
-    '''
+    '''Takes a list of same type audio features, and draws a spectrogram for each one'''
     def draw_spec(spec: Spec, attribute: str, fig: plt.Figure, ax: plt.Axes):
         img = librosa.display.specshow(
             librosa.amplitude_to_db(getattr(spec, attribute), ref=np.max),
@@ -77,11 +77,8 @@ def spectra_of_spectra(mfcc):
     '''
     # first calculate the psd
     fft = np.fft.fft(mfcc.y)
-    pprint(fft)
     fft = fft[:len(fft)//2+1]
-    pprint(fft)
     psd1 = np.real(fft * np.conj(fft))
-    pprint(psd1)
     # then calculate the psd of the psd
     fft = np.fft.fft(psd1/sum(psd1))
     fft = fft[:len(fft)//2+1]
@@ -95,19 +92,18 @@ def sort_mfccs(mfccs):
     return([mfccs[i] for i in sorted_order])
 
 
-
 sound_files_1 = json.load(open('./data/sound_files_1.json'))
 mfccs_1 = get_mfccs(sound_files_1)
 spectra_of_spectra(mfccs_1[0])
-# sorted_mfccs_1 = sort_mfccs(mfccs_1)
-# draw_specs(sorted_mfccs_1, 'mfcc', 'spectra_of_spectra_transients_1 - ')
-# plt.savefig('spectra_of_spectra_transients_1.png')
+sorted_mfccs_1 = sort_mfccs(mfccs_1)
+draw_specs(sorted_mfccs_1, 'mfcc', 'spectra_of_spectra_transients_1 - ')
+plt.savefig('spectra_of_spectra_transients_1.png')
 
-# sound_files_2 = json.load(open('./data/sound_files_2.json'))
-# mfccs_2 = get_mfccs(sound_files_2)
-# sorted_mfccs_2 = sort_mfccs(mfccs_2)
-# draw_specs(sorted_mfccs_2, 'mfcc', 'spectra_of_spectra_transients_2 - ')
-# plt.savefig('spectra_of_spectra_transients_2.png')
+sound_files_2 = json.load(open('./data/sound_files_2.json'))
+mfccs_2 = get_mfccs(sound_files_2)
+sorted_mfccs_2 = sort_mfccs(mfccs_2)
+draw_specs(sorted_mfccs_2, 'mfcc', 'spectra_of_spectra_transients_2 - ')
+plt.savefig('spectra_of_spectra_transients_2.png')
 
 '''
 Last point regarding question in code re: UserWarning

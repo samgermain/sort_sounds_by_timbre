@@ -19,7 +19,7 @@ def ez_load(sound_file: str, sr: Optional[int] = None):
 parser = argparse.ArgumentParser(
     description=(
         'Create a plot of each sound in the sound, sorted by sound similarity. '
-        '-i infile'
+        '-i infile (required)'
         '-o outfile'
         '-m output from Ableton right click -> slice to new midi track'
         '-s sample rate'
@@ -29,6 +29,7 @@ parser.add_argument(
     '-i',
     '--infile',
     type=str,
+    required=True,
 )
 parser.add_argument(
     '-o',

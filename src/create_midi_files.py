@@ -22,9 +22,7 @@ def create_track_from_time(
     program = pretty_midi.instrument_name_to_program(instrument_name)
     instrument = pretty_midi.Instrument(program=program)
     note_number = pretty_midi.note_name_to_number(note)
-    for times in intervals:
-        start = times[0]
-        stop = times[1]
+    for (start, stop) in intervals:
         # Divide by 1000 to account for that other thing that doesn't make sense. Search for "sense"
         note = pretty_midi.Note(velocity=velocity, pitch=note_number, start=(start)/1000, end=(stop)/1000)
         instrument.notes.append(note)

@@ -5,3 +5,4 @@ src/__pycache__
 assets/sound-files/full-songs/infected-mushroom-astix-on-mushrooms.wav
 .mypy_cache
 .vscode
+.env

@@ -46,9 +46,9 @@ args = parser.parse_args()
 y, sr = ez_load(args.infile, args.sr)
 
 if (args.midi):
-    transient_locations = get_transient_locations(y, args.midi)
+    transient_locations = get_transient_locations(y, args.midi, sr=sr)
 else:
-    transient_locations = get_transient_locations(y)
+    transient_locations = get_transient_locations(y, sr=sr)
 
 sorted_locations = sort_locations_by_spectra_of_spectra(y, transient_locations)
-create_midi_from_locations(sorted_locations, args.outfile)
+create_midi_from_locations(sorted_locations, sr, args.outfile)

@@ -2,7 +2,7 @@ from typing import List, Tuple
 
 import librosa
 import pretty_midi
-import numpy as np
+# import numpy as np
 
 
 def create_sample(
@@ -33,7 +33,7 @@ def create_sample(
 
 def create_midi_from_locations(
     locations: List[Tuple[int, int]],
-    sr,
+    sr: int,
     outfile: str = "outfile.mid",
 ):
     """
@@ -48,6 +48,7 @@ def create_midi_from_locations(
     for sound in locations:
         [start, stop] = librosa.samples_to_time(samples=sound, sr=sr)
         track = create_sample(start, stop)
+        print(track)
         midi.instruments.append(track)
 
     midi.write(outfile)

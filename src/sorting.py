@@ -1,9 +1,10 @@
 # import matplotlib.pyplot as plt
-from typing import List, Tuple
+from typing import List, Literal, Tuple
 
 import numpy as np
 
 from split_transients import locations_to_samples, locations_to_spectrograms
+from timbral_models import timbral_extractor
 
 
 def spectra_of_spectra(sample: np.ndarray):
@@ -99,6 +100,31 @@ def sort_locations_by_time_and_coef(
     return np.array(sorted_locations)
 
 
+def sort_and_group_locations(
+    locations: List[Tuple[int, int]],
+    indexed_sorted_values: List[Tuple[int, float]],
+    diff_threshold: float = 0.1,
+):
+    sorted_order = [i[0] for i in indexed_sorted_values]
+    sorted_values = [np.log10(value[1]) for value in indexed_sorted_values]
+    sorted_locations = [locations[i] for i in sorted_order]
+
+    # Group sounds together that are the same
+    grouped_values = [[sorted_values[0]]]
+    grouped_locations = [[sorted_locations[0]]]
+    for i in range(1, len(sorted_values)):
+        value = sorted_values[i]
+        past_value = grouped_values[-1][-1]
+        if abs(value - past_value) < diff_threshold:
+            grouped_values[-1].append(value)
+            grouped_locations[-1].append(sorted_locations[i])
+        else:
+            grouped_values.append([sorted_values[i]])
+            grouped_locations.append([sorted_locations[i]])
+
+    return(grouped_locations)
+
+
 def sort_locations_by_spectra_of_spectra(
     y: np.ndarray,
     locations: List[Tuple[int, int]]
@@ -110,22 +136,101 @@ def sort_locations_by_spectra_of_spectra(
 
     samples = locations_to_samples(y, locations)
     values = [spectra_of_spectra(sample) for sample in samples]
+    indexed_sorted_values = sorted(enumerate(values), key=lambda x: x[1], reverse=True)
+    return sort_and_group_locations(
+        indexed_sorted_values=indexed_sorted_values,
+        locations=locations
+    )
+
+
+def sort_by_timbre(
+    y: np.ndarray,
+    sr: int,
+    locations: List[Tuple[int, int]],
+    quality: Literal[
+        'hardness',
+        'depth',
+        'brightness',
+        'roughness',
+        'warmth',
+        'sharpness',
+        'boominess',
+        'reverb',
+    ]
+):
+    samples = locations_to_samples(y, locations)
+    values = [timbral_extractor(fname=sample, fs=sr)["timbre"][quality] for sample in samples]
     indexed_sorted_values = sorted(
-        enumerate(values), key=lambda x: x[1], reverse=True)
-    sorted_order = [i[0] for i in indexed_sorted_values]
-    sorted_values = [np.log10(value[1]) for value in indexed_sorted_values]
-    sorted_locations = [locations[i] for i in sorted_order]
+        enumerate(values),
+        key=lambda x: x[1],
+    )
+    return indexed_sorted_values
+    # return sort_and_group_locations(
+    #     indexed_sorted_values=indexed_sorted_values,
+    #     locations=locations,
+    #     diff_threshold=0.01
+    # )
 
-    grouped_values = [[sorted_values[0]]]
-    grouped_locations = [[sorted_locations[0]]]
-    for i in range(1, len(sorted_values)):
-        value = sorted_values[i]
-        past_value = grouped_values[-1][-1]
-        if abs(value - past_value) < 0.01:
-            grouped_values[-1].append(value)
-            grouped_locations[-1].append(sorted_locations[i])
-        else:
-            grouped_values.append([sorted_values[i]])
-            grouped_locations.append([sorted_locations[i]])
 
-    return(grouped_locations)
+def sortByHardness(
+    y: np.ndarray,
+    sr: int,
+    locations: List[Tuple[int, int]]
+):
+    return sort_by_timbre(y, sr, locations, 'hardness')
+
+
+def sortByDepth(
+    y: np.ndarray,
+    sr: int,
+    locations: List[Tuple[int, int]]
+):
+    return sort_by_timbre(y, sr, locations, 'depth')
+
+
+def sortByBrightness(
+    y: np.ndarray,
+    sr: int,
+    locations: List[Tuple[int, int]]
+):
+    sort_by_timbre(y, sr, locations, 'brightness')
+
+
+def sortByRoughness(
+    y: np.ndarray,
+    sr: int,
+    locations: List[Tuple[int, int]]
+):
+    return sort_by_timbre(y, sr, locations, 'roughness')
+
+
+def sortByWarmth(
+    y: np.ndarray,
+    sr: int,
+    locations: List[Tuple[int, int]]
+):
+    return sort_by_timbre(y, sr, locations, 'warmth')
+
+
+def sortBySharpness(
+    y: np.ndarray,
+    sr: int,
+    locations: List[Tuple[int, int]]
+):
+    return sort_by_timbre(y, sr, locations, 'sharpness')
+
+
+def sortByBoominess(
+    y: np.ndarray,
+    sr: int,
+    locations: List[Tuple[int, int]]
+):
+    return sort_by_timbre(y, sr, locations, 'boominess')
+
+
+def sortByReverb(
+    y: np.ndarray,
+    sr: int,
+    locations: List[Tuple[int, int]]
+):
+    return sort_by_timbre(y, sr, locations, 'reverb')

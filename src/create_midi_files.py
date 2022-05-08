@@ -6,16 +6,14 @@ import pretty_midi
 
 
 def create_sample(
-    start: float,
-    stop: float,
+    locations: List[Tuple[int, int]],
+    sr: int,
     note: str = 'A3',
     instrument_name: str = 'Acoustic Grand Piano',
     velocity: int = 100
 ) -> pretty_midi.Instrument:
     """
-    Takes a start and stop times that this sound plays and writes a track with that start and stop time
-    :param start: Start time
-    :param stop: Stop time
+    Takes a list of start and stop times that this sound plays and writes a track with those start and stop time
     :param note: Defaults to 'A3'
     :param instrument: The instrument this midi track is recorded as. Defaults to 'Acoustic Grand Piano'
     :param velocity: Defaults to 100
@@ -25,14 +23,15 @@ def create_sample(
     program = pretty_midi.instrument_name_to_program(instrument_name)
     instrument = pretty_midi.Instrument(program=program)
     note_number = pretty_midi.note_name_to_number(note)
-    # Divide by 1000 to account for that other thing that doesn't make sense. Search for "sense"
-    note = pretty_midi.Note(velocity=velocity, pitch=note_number, start=(start), end=(stop))
-    instrument.notes.append(note)
+    for location in locations:
+        [start, stop] = librosa.samples_to_time(samples=location, sr=sr)
+        note = pretty_midi.Note(velocity=velocity, pitch=note_number, start=(start), end=(stop))
+        instrument.notes.append(note)
     return instrument
 
 
 def create_midi_from_locations(
-    locations: List[Tuple[int, int]],
+    locations: List[List[Tuple[int, int]]],
     sr: int,
     outfile: str = "outfile.mid",
 ):
@@ -46,8 +45,10 @@ def create_midi_from_locations(
     # sound_list = align_times_to_start(sound_list)
 
     for sound in locations:
-        [start, stop] = librosa.samples_to_time(samples=sound, sr=sr)
-        track = create_sample(start, stop)
+        track = create_sample(
+            locations=sound,
+            sr=sr,
+        )
         midi.instruments.append(track)
 
     midi.write(outfile)

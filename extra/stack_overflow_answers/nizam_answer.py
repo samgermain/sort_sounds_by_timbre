@@ -8,10 +8,10 @@ from pathlib import Path
 
 from timbral_models import timbral_extractor
 
-path = Path("sort-sounds-by-similarity-from-sound-file/assets/transients_1/")
+path = Path(
+    "/Users/sam/Documents/dev/sort_sounds_by_timbre/assets/transients_1/")
 timbres = [
     {"file": file, "timbre": timbral_extractor(str(file))} for file in path.glob("*wav")
-
 ]
 itemgetters = {key: itemgetter(key) for key in timbres[0]["timbre"]}
 

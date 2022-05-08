@@ -26,7 +26,7 @@ def create_sample(
     instrument = pretty_midi.Instrument(program=program)
     note_number = pretty_midi.note_name_to_number(note)
     # Divide by 1000 to account for that other thing that doesn't make sense. Search for "sense"
-    note = pretty_midi.Note(velocity=velocity, pitch=note_number, start=(start)/1000, end=(stop)/1000)
+    note = pretty_midi.Note(velocity=velocity, pitch=note_number, start=(start), end=(stop))
     instrument.notes.append(note)
     return instrument
 
@@ -48,7 +48,6 @@ def create_midi_from_locations(
     for sound in locations:
         [start, stop] = librosa.samples_to_time(samples=sound, sr=sr)
         track = create_sample(start, stop)
-        print(track)
         midi.instruments.append(track)
 
     midi.write(outfile)

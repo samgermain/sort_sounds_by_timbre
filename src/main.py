@@ -5,7 +5,7 @@ from ez_load import ez_load
 from parser import parser
 
 
-args = parser.parse_args()
+args = parser.parse_args()  # infile, outfile, midi, sr
 y, sr = ez_load(args.infile, args.sr)
 
 if (args.midi):

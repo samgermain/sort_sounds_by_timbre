@@ -156,20 +156,21 @@ def sort_by_timbre(
         'sharpness',
         'boominess',
         'reverb',
-    ]
+    ],
+    diff_threshold=0.5
 ):
     samples = locations_to_samples(y, locations)
-    values = [timbral_extractor(fname=sample, fs=sr)["timbre"][quality] for sample in samples]
+    values = [timbral_extractor(fname=sample, fs=sr, verbose=False)[quality] for sample in samples]
     indexed_sorted_values = sorted(
         enumerate(values),
         key=lambda x: x[1],
     )
-    return indexed_sorted_values
-    # return sort_and_group_locations(
-    #     indexed_sorted_values=indexed_sorted_values,
-    #     locations=locations,
-    #     diff_threshold=0.01
-    # )
+    # * cut off and return above value for plotting
+    return sort_and_group_locations(
+        indexed_sorted_values=indexed_sorted_values,
+        locations=locations,
+        diff_threshold=diff_threshold
+    )
 
 
 def sortByHardness(
@@ -209,7 +210,7 @@ def sortByWarmth(
     sr: int,
     locations: List[Tuple[int, int]]
 ):
-    return sort_by_timbre(y, sr, locations, 'warmth')
+    return sort_by_timbre(y, sr, locations, 'warmth', diff_threshold=0.2)
 
 
 def sortBySharpness(
@@ -217,7 +218,7 @@ def sortBySharpness(
     sr: int,
     locations: List[Tuple[int, int]]
 ):
-    return sort_by_timbre(y, sr, locations, 'sharpness')
+    return sort_by_timbre(y, sr, locations, 'sharpness', diff_threshold=0.2)
 
 
 def sortByBoominess(

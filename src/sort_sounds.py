@@ -110,17 +110,21 @@ def sort_locations_by_spectra_of_spectra(
 
     samples = locations_to_samples(y, locations)
     values = [spectra_of_spectra(sample) for sample in samples]
-    sorted_values = sorted(enumerate(values), key=lambda x: x[1], reverse=True)
-    sorted_order = [i[0] for i in sorted_values]
+    indexed_sorted_values = sorted(enumerate(values), key=lambda x: x[1], reverse=True)
+    sorted_order = [i[0] for i in indexed_sorted_values]
+    sorted_values = [np.log10(value[1]) for value in indexed_sorted_values]
     sorted_locations = [locations[i] for i in sorted_order]
 
     grouped_values = [[sorted_values[0]]]
     grouped_locations = [[sorted_locations[0]]]
     for i in range(1, len(sorted_values)):
-        [_, value] = sorted_values[i]
-        [_, past_value] = grouped_values[-1][-1]
+        value = sorted_values[i]
+        past_value = grouped_values[-1][-1]
         if abs(value - past_value) < 0.01:
             grouped_values[-1].append(value)
             grouped_locations[-1].append(sorted_locations[i])
+        else:
+            grouped_values.append([sorted_values[i]])
+            grouped_locations.append([sorted_locations[i]])
 
     return(grouped_locations)

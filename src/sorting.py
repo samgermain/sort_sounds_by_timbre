@@ -110,7 +110,8 @@ def sort_locations_by_spectra_of_spectra(
 
     samples = locations_to_samples(y, locations)
     values = [spectra_of_spectra(sample) for sample in samples]
-    indexed_sorted_values = sorted(enumerate(values), key=lambda x: x[1], reverse=True)
+    indexed_sorted_values = sorted(
+        enumerate(values), key=lambda x: x[1], reverse=True)
     sorted_order = [i[0] for i in indexed_sorted_values]
     sorted_values = [np.log10(value[1]) for value in indexed_sorted_values]
     sorted_locations = [locations[i] for i in sorted_order]

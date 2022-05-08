@@ -35,6 +35,22 @@ class MFCC(Spec):
     delta2_mfcc: np.ndarray  # delta2 Mel-frequency cepstral coefficient
     n_mfcc: int = 13
 
+    @property
+    def spectra_of_spectra(self) -> int:
+        '''
+        Step 2: Calculate the PSD of the PSD and integrate (or really just sum):
+        Dividing by the length (normalizing) helps to compare different files of different lengths.
+        '''
+        # first calculate the psd
+        fft = np.fft.fft(self.y)
+        fft = fft[:len(fft)//2+1]
+        psd1 = np.real(fft * np.conj(fft))
+        # then calculate the psd of the psd
+        fft = np.fft.fft(psd1/sum(psd1))
+        fft = fft[:len(fft)//2+1]
+        psd = np.real(fft * np.conj(fft))
+        return(np.sum(psd)/len(psd))
+
     def __init__(self, sound_file: str):
         self.name = path.basename(sound_file)
         self.y, sr = librosa.load(sound_file, sr=self.sr)  # <--- This line is changed
@@ -47,12 +63,18 @@ def get_mfccs(sound_files: List[str]) -> List[MFCC]:
     '''
     :param sound_files: Each item is a path to a sound file (wav, mp3, ...)
     '''
-    mfccs = [MFCC(sound_file) for sound_file in sound_files]
-    return mfccs
+    return [MFCC(sound_file) for sound_file in sound_files]
+
+
+def sort_mfccs(mfccs):
+    values = [mfcc.spectra_of_spectra for mfcc in mfccs]
+    sorted_order = [i[0] for i in sorted(enumerate(values), key=lambda x:x[1], reverse=True)]
+    return([mfccs[i] for i in sorted_order])
 
 
 def draw_specs(spec_list: List[Spec], attribute: str, title: str):
     '''Takes a list of same type audio features, and draws a spectrogram for each one'''
+
     def draw_spec(spec: Spec, attribute: str, fig: plt.Figure, ax: plt.Axes):
         img = librosa.display.specshow(
             librosa.amplitude_to_db(getattr(spec, attribute), ref=np.max),
@@ -76,38 +98,41 @@ def draw_specs(spec_list: List[Spec], attribute: str, title: str):
             draw_spec(spec_list[spec+2], attribute, fig, axs.flat[spec+2])
 
 
-def spectra_of_spectra(mfcc):
-    '''
-    Step 2: Calculate the PSD of the PSD and integrate (or really just sum):
-    Dividing by the length (normalizing) helps to compare different files of different lengths.
-    '''
-    # first calculate the psd
-    fft = np.fft.fft(mfcc.y)
-    fft = fft[:len(fft)//2+1]
-    psd1 = np.real(fft * np.conj(fft))
-    # then calculate the psd of the psd
-    fft = np.fft.fft(psd1/sum(psd1))
-    fft = fft[:len(fft)//2+1]
-    psd = np.real(fft * np.conj(fft))
-    return(np.sum(psd)/len(psd))
+def diff_matrix(mfccs, outfile):
+    plt.figure()
+    max_spec = 0
 
+    for i in range(len(mfccs)):
+        value = -np.log10(mfccs[i].spectra_of_spectra)
+        plt.text(
+            i,
+            value,
+            mfccs[i].name.split('.')[0],
+            fontsize=4
+        )
+        if value > max_spec:
+            max_spec = value
 
-def sort_mfccs(mfccs):
-    values = [spectra_of_spectra(mfcc) for mfcc in mfccs]
-    sorted_order = [i[0] for i in sorted(enumerate(values), key=lambda x:x[1], reverse=True)]
-    return([mfccs[i] for i in sorted_order])
+    plt.xticks([])
+    plt.xlim([0, len(mfccs)])
+    # plt.ylim()
+    plt.yticks(np.arange(0, max_spec * 1.1, 0.05), fontsize=4)
+    plt.ylabel('Value')
+    plt.grid()
+    plt.savefig(outfile)
 
 
 sound_files_1 = json.load(open('./data/sound_files_1.json'))
 mfccs_1 = get_mfccs(sound_files_1)
-spectra_of_spectra(mfccs_1[0])
 sorted_mfccs_1 = sort_mfccs(mfccs_1)
+diff_matrix(sorted_mfccs_1, 'sorted_mfccs_1')
 draw_specs(sorted_mfccs_1, 'mfcc', 'spectra_of_spectra_transients_1 - ')
 plt.savefig('spectra_of_spectra_transients_1.png')
 
 sound_files_2 = json.load(open('./data/sound_files_2.json'))
 mfccs_2 = get_mfccs(sound_files_2)
 sorted_mfccs_2 = sort_mfccs(mfccs_2)
+diff_matrix(sorted_mfccs_2, 'sorted_mfccs_2')
 draw_specs(sorted_mfccs_2, 'mfcc', 'spectra_of_spectra_transients_2 - ')
 plt.savefig('spectra_of_spectra_transients_2.png')
 

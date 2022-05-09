@@ -1,5 +1,6 @@
 from create_midi_files import create_midi_from_locations
-from sorting import sort_locations_by_spectra_of_spectra
+from sorting import (sortByHardness, sortByDepth, sortByBrightness, sortByRoughness, sortByWarmth,
+                     sortBySharpness, sortByBoominess, sortByReverb, sort_locations_by_spectra_of_spectra)
 from split_transients import get_transient_locations
 from ez_load import ez_load
 from parser import parser

@@ -2,6 +2,7 @@ from typing import List, Tuple
 
 import librosa
 import pretty_midi
+from types import LocationList
 # import numpy as np
 
 
@@ -31,7 +32,7 @@ def create_sample(
 
 
 def create_midi_from_locations(
-    locations: List[List[Tuple[int, int]]],
+    locations: List[LocationList],
     sr: int,
     outfile: str = "outfile.mid",
 ):

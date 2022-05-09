@@ -5,6 +5,7 @@ import numpy as np
 
 from split_transients import locations_to_samples, locations_to_spectrograms
 from timbral_models import timbral_extractor
+from types import LocationList
 
 
 def spectra_of_spectra(sample: np.ndarray):
@@ -47,8 +48,8 @@ def get_similarity_coefficients(S: List[np.ndarray]) -> List[List[float]]:
 
 def sort_locations_by_coef(
     y: np.ndarray,
-    locations: List[Tuple[int, int]]
-) -> List[List[Tuple[int, int]]]:
+    locations: LocationList
+) -> List[LocationList]:
     """
     # ! Bad
     Sorts all the sounds in a sound file by sound similarity. Longer sounds are cropped to the length of the
@@ -65,7 +66,7 @@ def sort_locations_by_coef(
 
 def sort_locations_by_time_and_coef(
     y: np.ndarray,
-    locations: List[Tuple[int, int]]
+    locations: LocationList
 ):
     """
     # ! Bad
@@ -101,7 +102,7 @@ def sort_locations_by_time_and_coef(
 
 
 def sort_and_group_locations(
-    locations: List[Tuple[int, int]],
+    locations: LocationList,
     indexed_sorted_values: List[Tuple[int, float]],
     diff_threshold: float = 0.1,
 ):
@@ -127,7 +128,7 @@ def sort_and_group_locations(
 
 def sort_locations_by_spectra_of_spectra(
     y: np.ndarray,
-    locations: List[Tuple[int, int]]
+    locations: LocationList
 ):
     """
     :param y: sound file processed by librosa
@@ -146,7 +147,7 @@ def sort_locations_by_spectra_of_spectra(
 def sort_by_timbre(
     y: np.ndarray,
     sr: int,
-    locations: List[Tuple[int, int]],
+    locations: LocationList,
     quality: Literal[
         'hardness',
         'depth',
@@ -176,7 +177,7 @@ def sort_by_timbre(
 def sortByHardness(
     y: np.ndarray,
     sr: int,
-    locations: List[Tuple[int, int]]
+    locations: LocationList
 ):
     return sort_by_timbre(y, sr, locations, 'hardness')
 
@@ -184,7 +185,7 @@ def sortByHardness(
 def sortByDepth(
     y: np.ndarray,
     sr: int,
-    locations: List[Tuple[int, int]]
+    locations: LocationList
 ):
     return sort_by_timbre(y, sr, locations, 'depth')
 
@@ -192,7 +193,7 @@ def sortByDepth(
 def sortByBrightness(
     y: np.ndarray,
     sr: int,
-    locations: List[Tuple[int, int]]
+    locations: LocationList
 ):
     sort_by_timbre(y, sr, locations, 'brightness')
 
@@ -200,7 +201,7 @@ def sortByBrightness(
 def sortByRoughness(
     y: np.ndarray,
     sr: int,
-    locations: List[Tuple[int, int]]
+    locations: LocationList
 ):
     return sort_by_timbre(y, sr, locations, 'roughness')
 
@@ -208,7 +209,7 @@ def sortByRoughness(
 def sortByWarmth(
     y: np.ndarray,
     sr: int,
-    locations: List[Tuple[int, int]]
+    locations: LocationList
 ):
     return sort_by_timbre(y, sr, locations, 'warmth', diff_threshold=0.2)
 
@@ -216,7 +217,7 @@ def sortByWarmth(
 def sortBySharpness(
     y: np.ndarray,
     sr: int,
-    locations: List[Tuple[int, int]]
+    locations: LocationList
 ):
     return sort_by_timbre(y, sr, locations, 'sharpness', diff_threshold=0.2)
 
@@ -224,7 +225,7 @@ def sortBySharpness(
 def sortByBoominess(
     y: np.ndarray,
     sr: int,
-    locations: List[Tuple[int, int]]
+    locations: LocationList
 ):
     return sort_by_timbre(y, sr, locations, 'boominess')
 
@@ -232,6 +233,6 @@ def sortByBoominess(
 def sortByReverb(
     y: np.ndarray,
     sr: int,
-    locations: List[Tuple[int, int]]
+    locations: LocationList
 ):
     return sort_by_timbre(y, sr, locations, 'reverb')

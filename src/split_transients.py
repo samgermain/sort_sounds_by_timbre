@@ -1,12 +1,13 @@
 # import matplotlib.pyplot as plt
 import os
 import shutil
-from typing import List, Optional, Tuple
+from typing import List, Optional
 
 import librosa
 import numpy as np
 import pretty_midi
 import soundfile as sf
+from types import LocationList
 
 # from config import assets
 
@@ -25,7 +26,7 @@ def get_onsets(y: np.ndarray, sr: int) -> List[int]:
     return librosa.frames_to_samples(onsets)
 
 
-def onsets_to_transient_locations(onset_samples: List[int]) -> List[Tuple[int, int]]:
+def onsets_to_transient_locations(onset_samples: List[int]) -> LocationList:
     """
     Takes a list of onset times for an audio file and returns the list of start and stop times for that audio file
     :param [int] onset_samples: I don't really know what these are actually.
@@ -43,7 +44,7 @@ def onsets_to_transient_locations(onset_samples: List[int]) -> List[Tuple[int, i
 
 def locations_to_samples(
     y: np.ndarray,
-    transient_locations: List[Tuple[int, int]]
+    transient_locations: LocationList
 ) -> List[np.ndarray]:
 
     transient_samples = []
@@ -58,7 +59,7 @@ def get_transient_locations(
     y: Optional[np.ndarray] = None,
     midi_file: Optional[str] = None,
     sr: int = 44100
-) -> List[Tuple[int, int]]:
+) -> LocationList:
     """
     Takes the path to an audio file and returns the list of start and stop times for that
     audio file as a frame rate. The midi file would have the correct start and stop times
@@ -99,7 +100,7 @@ def save_transients(
 
 def locations_to_spectrograms(
     y: np.ndarray,
-    locations: List[Tuple[int, int]]
+    locations: LocationList
 ) -> List[np.ndarray]:
 
     samples = locations_to_samples(y, locations)

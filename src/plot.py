@@ -2,8 +2,16 @@ import matplotlib.pyplot as plt
 import numpy as np
 from ez_load import ez_load
 from parser import parser
-from sorting import (sortByHardness, sortByDepth, sortByBrightness, sortByRoughness, sortByWarmth,
-                     sortBySharpness, sortByBoominess, sortByReverb)
+from sorting import (
+    sort_by_hardness,
+    # sort_by_depth,
+    # sort_by_brightness,
+    sort_by_roughness,
+    sort_by_warmth,
+    sort_by_sharpness,
+    sort_by_boominess,
+    sort_by_reverb,
+)
 from split_transients import get_transient_locations
 
 
@@ -48,14 +56,14 @@ def main():
     else:
         transient_locations = get_transient_locations(y, sr=sr)
 
-    diff_matrix(values=sortByHardness(y, sr, transient_locations), outfile='hardness.png')
+    diff_matrix(values=sort_by_hardness(y, sr, transient_locations), outfile='hardness.png')
     # diff_matrix(values=sortByDepth(y, sr, transient_locations), outfile='depth.png')
     # diff_matrix(values=sortByBrightness(y, sr, transient_locations), outfile='brightness.png')
-    diff_matrix(values=sortByRoughness(y, sr, transient_locations), outfile='roughness.png')
-    diff_matrix(values=sortByWarmth(y, sr, transient_locations), outfile='warmth.png')
-    diff_matrix(values=sortBySharpness(y, sr, transient_locations), outfile='sharpness.png')
-    diff_matrix(values=sortByBoominess(y, sr, transient_locations), outfile='boominess.png')
-    diff_matrix(values=sortByReverb(y, sr, transient_locations), outfile='reverb.png')
+    diff_matrix(values=sort_by_roughness(y, sr, transient_locations), outfile='roughness.png')
+    diff_matrix(values=sort_by_warmth(y, sr, transient_locations), outfile='warmth.png')
+    diff_matrix(values=sort_by_sharpness(y, sr, transient_locations), outfile='sharpness.png')
+    diff_matrix(values=sort_by_boominess(y, sr, transient_locations), outfile='boominess.png')
+    diff_matrix(values=sort_by_reverb(y, sr, transient_locations), outfile='reverb.png')
 
 
 main()

@@ -126,7 +126,7 @@ def sort_and_group_locations(
     return(grouped_locations)
 
 
-def sort_locations_by_spectra_of_spectra(
+def sort_by_spectra_of_spectra(
     y: np.ndarray,
     locations: LocationList
 ):
@@ -174,7 +174,7 @@ def sort_by_timbre(
     )
 
 
-def sortByHardness(
+def sort_by_hardness(
     y: np.ndarray,
     sr: int,
     locations: LocationList
@@ -182,7 +182,7 @@ def sortByHardness(
     return sort_by_timbre(y, sr, locations, 'hardness')
 
 
-def sortByDepth(
+def sort_by_depth(
     y: np.ndarray,
     sr: int,
     locations: LocationList
@@ -190,7 +190,7 @@ def sortByDepth(
     return sort_by_timbre(y, sr, locations, 'depth')
 
 
-def sortByBrightness(
+def sort_by_brightness(
     y: np.ndarray,
     sr: int,
     locations: LocationList
@@ -198,7 +198,7 @@ def sortByBrightness(
     sort_by_timbre(y, sr, locations, 'brightness')
 
 
-def sortByRoughness(
+def sort_by_roughness(
     y: np.ndarray,
     sr: int,
     locations: LocationList
@@ -206,7 +206,7 @@ def sortByRoughness(
     return sort_by_timbre(y, sr, locations, 'roughness')
 
 
-def sortByWarmth(
+def sort_by_warmth(
     y: np.ndarray,
     sr: int,
     locations: LocationList
@@ -214,7 +214,7 @@ def sortByWarmth(
     return sort_by_timbre(y, sr, locations, 'warmth', diff_threshold=0.2)
 
 
-def sortBySharpness(
+def sort_by_sharpness(
     y: np.ndarray,
     sr: int,
     locations: LocationList
@@ -222,7 +222,7 @@ def sortBySharpness(
     return sort_by_timbre(y, sr, locations, 'sharpness', diff_threshold=0.2)
 
 
-def sortByBoominess(
+def sort_by_boominess(
     y: np.ndarray,
     sr: int,
     locations: LocationList
@@ -230,7 +230,7 @@ def sortByBoominess(
     return sort_by_timbre(y, sr, locations, 'boominess')
 
 
-def sortByReverb(
+def sort_by_reverb(
     y: np.ndarray,
     sr: int,
     locations: LocationList

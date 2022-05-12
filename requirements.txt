@@ -3,3 +3,4 @@ matplotlib==3.4.3
 typing==3.7.4.3
 numpy==1.21.4
 pretty_midi==0.2.9
+timbral_models=0.4.0

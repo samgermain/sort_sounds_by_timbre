@@ -1,11 +1,13 @@
 # import matplotlib.pyplot as plt
-from typing import List, Literal, Tuple
+from typing import List, Literal, NewType, Tuple
 
 import numpy as np
 
 from split_transients import locations_to_samples, locations_to_spectrograms
 from timbral_models import timbral_extractor
-from types import LocationList
+
+Location = NewType('Location', Tuple[int, int])
+LocationList = NewType('LocationList', List[Location])
 
 
 def spectra_of_spectra(sample: np.ndarray):

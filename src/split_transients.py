@@ -1,15 +1,17 @@
 # import matplotlib.pyplot as plt
 import os
 import shutil
-from typing import List, Optional
+from typing import List, Optional, NewType, Tuple
 
 import librosa
 import numpy as np
 import pretty_midi
 import soundfile as sf
-from types import LocationList
+
 
 # from config import assets
+Location = NewType('Location', Tuple[int, int])
+LocationList = NewType('LocationList', List[Location])
 
 
 def get_onsets_from_midi(midi_file: str, sr: int) -> List[int]:

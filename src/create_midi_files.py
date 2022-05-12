@@ -1,9 +1,11 @@
-from typing import List
+from typing import List, Tuple, NewType
 
 import librosa
 import pretty_midi
-from types import LocationList
 # import numpy as np
+
+Location = NewType('Location', Tuple[int, int])
+LocationList = NewType('LocationList', List[Location])
 
 
 def create_instrument(instrument_name: str = 'Acoustic Grand Piano'):

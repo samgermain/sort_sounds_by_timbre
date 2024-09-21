@@ -29,5 +29,4 @@ Run the program by executing
 
 # Limitations
 
-- the sorting is currently not very good
 - the transient separation is currently not very good. It's suggested to use a transient separated midi file, which you can get from Ableton buy right clicking on an audio track and selecting "Slice To New MIDI Track", and then right clicking on the midi track and selecting "Export MIDI Clip..."
